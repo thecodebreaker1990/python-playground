@@ -1,3 +1,4 @@
+import random
 class BinaryHeap:
     def __init__(self):
         self.values = []
@@ -24,18 +25,47 @@ class BinaryHeap:
 
         return max_element
     
-    def create_heap(self, arr):
-        for i in range(len(arr)):
-            el = arr[i]
-            self.insert(el)
+    def build_max_heap(self, arr):
+        for i in range(len(arr) - 1, -1, -1):
+            self.max_heapify(arr, i)
+
+        self.values = arr.copy()
+        self.heap_length = len(self.values)
+
+
+    def max_heapify(self, arr, i):
+        element = arr[i]
+
+        while i < len(arr):
+            left_idx, right_idx = 2 * i + 1, 2 * i + 2
+            left_child, right_child = float("-Inf"), float("-Inf")
+            swap = None
+
+            if left_idx < len(arr):
+                left_child = arr[left_idx]
+                if left_child > element:
+                    swap = left_idx
+
+            if right_idx < len(arr):
+                right_child = arr[right_idx]
+                if right_child > element and right_child > left_child:
+                    swap = right_idx
+
+            if swap is None:
+                break
+
+            arr[i] = arr[swap]
+            arr[swap] = element
+            i = swap
+
+    
 
     def sort(self, arr):
-        self.create_heap(arr)
+        self.build_max_heap(arr)
         
         length = range(self.heap_length)
-        for i in length:
-            max_el = self.extractMax()
-            print(f"Extracting Max = {max_el}")
+        for _ in length:
+            self.extractMax()
 
         return ", ".join(map(str, self.values))
 
@@ -91,12 +121,15 @@ class BinaryHeap:
 
         
 
+random_numbers = random.sample(range(1, 10000), 1000)
+
 max_heap = BinaryHeap()
 
 print(max_heap.sort([50, 20, 10, 16, 30, 8, 15, 60]))
+print(max_heap.sort(random_numbers))
 
-# max_heap.heapify([50, 20, 10, 16, 30, 8, 15])
-# print(max_heap)
+max_heap.build_max_heap([10, 20, 15, 12, 40, 25, 18])
+print(max_heap)
 
 # max_heap.insert(60)
 # print(max_heap)
