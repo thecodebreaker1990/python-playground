@@ -9,6 +9,9 @@ __pycache__/
 venv/
 env/
 
+# Ignore all .env files, recursively
+**/.env
+
 # IDEs/editors
 .vscode/
 .idea/
