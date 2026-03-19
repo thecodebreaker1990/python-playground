@@ -16,7 +16,7 @@ docs = loader.load()
 # print(f"Document metadata : {docs[0].metadata}")
 
 text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=1000, chunk_overlap=200, add_start_index=True
+    chunk_size=100, chunk_overlap=0, add_start_index=True
 )
 
 all_split_docs = text_splitter.split_documents(docs)
