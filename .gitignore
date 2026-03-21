@@ -12,6 +12,9 @@ env/
 # Ignore all .env files, recursively
 **/.env
 
+# Ignore all db files, recursively
+**/*.db
+
 # IDEs/editors
 .vscode/
 .idea/
