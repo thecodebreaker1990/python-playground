@@ -8,12 +8,15 @@ __pycache__/
 # Virtual environments
 venv/
 env/
+.venv/
 
 # Ignore all .env files, recursively
 **/.env
 
 # Ignore all db files, recursively
 **/*.db
+
+**/db.json
 
 # IDEs/editors
 .vscode/
