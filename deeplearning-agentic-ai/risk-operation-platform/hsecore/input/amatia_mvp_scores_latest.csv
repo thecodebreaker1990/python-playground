@@ -1,0 +1,6 @@
+contractor,month,gate,risk_score,risk_level,trust_score,trust_level,hours_month,operated
+Apex Heavy Industries,2026-03,AT_RISK,57.2,MOD,67.5,MED,2550,1
+Acme Industrial Solutions,2026-03,BLOCKED,50.1,MOD,75.0,HIGH,1950,1
+Cyberdyne Systems,2026-03,OK,5.9,LOW,20.0,LOW,420,1
+Globex International,2026-03,OK,0.8,LOW,75.0,HIGH,880,1
+Sinergy Managed Services,2026-03,OK,0.8,LOW,75.0,HIGH,1250,1

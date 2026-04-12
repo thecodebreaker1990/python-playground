@@ -1,0 +1,732 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Matriz de Escalamiento HSE 5x5 - Configuración editable",
+    "last_updated": "2026-03-03",
+    "author": "HSE Team",
+    "notes": "Este archivo define las acciones de remediación según la combinación Risk vs Trust"
+  },
+  
+  "labels": {
+    "_comment": "Etiquetas traducibles para la UI",
+    "risk_levels": {
+      "R1": {"es": "Muy Bajo", "en": "Very Low", "pt": "Muito Baixo", "color": "#10B981", "icon": "✅"},
+      "R2": {"es": "Bajo", "en": "Low", "pt": "Baixo", "color": "#22C55E", "icon": "🟢"},
+      "R3": {"es": "Moderado", "en": "Moderate", "pt": "Moderado", "color": "#F59E0B", "icon": "🟡"},
+      "R4": {"es": "Alto", "en": "High", "pt": "Alto", "color": "#EA580C", "icon": "🟠"},
+      "R5": {"es": "Crítico", "en": "Critical", "pt": "Crítico", "color": "#DC2626", "icon": "🔴"}
+    },
+    "trust_levels": {
+      "T1": {"es": "Muy Baja", "en": "Very Low", "pt": "Muito Baixa", "color": "#DC2626", "icon": "🔴"},
+      "T2": {"es": "Baja", "en": "Low", "pt": "Baixa", "color": "#EA580C", "icon": "🟠"},
+      "T3": {"es": "Media", "en": "Medium", "pt": "Média", "color": "#F59E0B", "icon": "🟡"},
+      "T4": {"es": "Alta", "en": "High", "pt": "Alta", "color": "#22C55E", "icon": "🟢"},
+      "T5": {"es": "Muy Alta", "en": "Very High", "pt": "Muito Alta", "color": "#10B981", "icon": "✅"}
+    },
+    "urgency_levels": {
+      "CRITICO": {"es": "Crítico", "en": "Critical", "pt": "Crítico", "color": "#DC2626"},
+      "MUY_ALTO": {"es": "Muy Alto", "en": "Very High", "pt": "Muito Alto", "color": "#EA580C"},
+      "ALTO": {"es": "Alto", "en": "High", "pt": "Alto", "color": "#F59E0B"},
+      "MEDIO_ALTO": {"es": "Medio Alto", "en": "Medium High", "pt": "Médio Alto", "color": "#FBBF24"},
+      "MEDIO": {"es": "Medio", "en": "Medium", "pt": "Médio", "color": "#FCD34D"},
+      "BAJO_MEDIO": {"es": "Bajo Medio", "en": "Low Medium", "pt": "Baixo Médio", "color": "#84CC16"},
+      "BAJO": {"es": "Bajo", "en": "Low", "pt": "Baixo", "color": "#22C55E"},
+      "MUY_BAJO": {"es": "Muy Bajo", "en": "Very Low", "pt": "Muito Baixo", "color": "#10B981"},
+      "MINIMO": {"es": "Mínimo", "en": "Minimum", "pt": "Mínimo", "color": "#059669"}
+    },
+    "escalation_levels": {
+      "1": {"es": "Bajo", "en": "Low", "pt": "Baixo", "icon": "✅", "color": "#10B981"},
+      "2": {"es": "Medio", "en": "Medium", "pt": "Médio", "icon": "🟢", "color": "#22C55E"},
+      "3": {"es": "Alto", "en": "High", "pt": "Alto", "icon": "🟡", "color": "#F59E0B"},
+      "4": {"es": "Muy Alto", "en": "Very High", "pt": "Muito Alto", "icon": "🟠", "color": "#EA580C"},
+      "5": {"es": "Crítico", "en": "Critical", "pt": "Crítico", "icon": "🔴", "color": "#DC2626"}
+    }
+  },
+
+  "tooltips": {
+    "_comment": "Textos de ayuda para mostrar en hover/tooltip",
+    "risk_score": {
+      "es": "Puntuación de riesgo basada en incidentes, acciones vencidas y tendencias. Mayor valor = más riesgo.",
+      "en": "Risk score based on incidents, overdue actions and trends. Higher value = more risk."
+    },
+    "trust_score": {
+      "es": "Puntuación de confianza basada en calidad de reportes y consistencia. Mayor valor = más confiable.",
+      "en": "Trust score based on report quality and consistency. Higher value = more trustworthy."
+    },
+    "cell_5x5": {
+      "es": "Posición en la matriz Risk vs Trust. Ej: R3-T4 = Riesgo Moderado, Confianza Alta.",
+      "en": "Position in Risk vs Trust matrix. Ex: R3-T4 = Moderate Risk, High Trust."
+    },
+    "remediation_days": {
+      "es": "Plazo máximo para completar el plan de remediación. No es inmediato, incluye checkpoints de verificación.",
+      "en": "Maximum deadline to complete remediation plan. Not immediate, includes verification checkpoints."
+    },
+    "time_penalty": {
+      "es": "Penalización acumulada por tiempo sin mejora. Funciona como interés moratorio - crece con inacción.",
+      "en": "Accumulated penalty for time without improvement. Works like late interest - grows with inaction."
+    }
+  },
+
+  "matrix": {
+    "_comment": "=== RIESGO CRÍTICO (80-100) - Fila R5 ===",
+    
+    "R5-T1": {
+      "_description": "Peor escenario: Riesgo crítico + Confianza muy baja",
+      "level": 5,
+      "urgency": "CRITICO",
+      "review_days": 1,
+      "remediation_days": 90,
+      "improvement_target": 40.0,
+      "action": {
+        "es": "SUSPENSIÓN INMEDIATA: Paralizar operaciones. Notificar dirección. Auditoría exhaustiva 48h.",
+        "en": "IMMEDIATE SUSPENSION: Stop operations. Notify management. Exhaustive audit 48h."
+      },
+      "tooltip": {
+        "es": "Situación crítica que requiere intervención inmediata del nivel más alto. Operaciones deben cesar.",
+        "en": "Critical situation requiring immediate intervention at highest level. Operations must stop."
+      }
+    },
+    
+    "R5-T2": {
+      "_description": "Riesgo crítico + Confianza baja",
+      "level": 5,
+      "urgency": "CRITICO",
+      "review_days": 3,
+      "remediation_days": 60,
+      "improvement_target": 35.0,
+      "action": {
+        "es": "SUSPENSIÓN CONDICIONAL: Reducir alcance al 25%. Plan correctivo 72h. Supervisión diaria.",
+        "en": "CONDITIONAL SUSPENSION: Reduce scope to 25%. Corrective plan 72h. Daily supervision."
+      },
+      "tooltip": {
+        "es": "Se permite operación limitada bajo supervisión estricta mientras se implementa plan correctivo.",
+        "en": "Limited operation allowed under strict supervision while corrective plan is implemented."
+      }
+    },
+    
+    "R5-T3": {
+      "_description": "Riesgo crítico + Confianza media",
+      "level": 4,
+      "urgency": "MUY_ALTO",
+      "review_days": 7,
+      "remediation_days": 45,
+      "improvement_target": 30.0,
+      "action": {
+        "es": "INTERVENCIÓN DIRECTA: Asignar supervisor HSE dedicado. Plan semanal obligatorio.",
+        "en": "DIRECT INTERVENTION: Assign dedicated HSE supervisor. Mandatory weekly plan."
+      },
+      "tooltip": {
+        "es": "La confianza media permite operación con supervisión dedicada. Requiere plan semanal verificable.",
+        "en": "Medium trust allows operation with dedicated supervision. Requires verifiable weekly plan."
+      }
+    },
+    
+    "R5-T4": {
+      "_description": "Riesgo crítico + Confianza alta",
+      "level": 4,
+      "urgency": "MUY_ALTO",
+      "review_days": 7,
+      "remediation_days": 30,
+      "improvement_target": 25.0,
+      "action": {
+        "es": "MONITOREO INTENSIVO: Reportes diarios. Verificaciones no anunciadas 2x/semana.",
+        "en": "INTENSIVE MONITORING: Daily reports. Unannounced verifications 2x/week."
+      },
+      "tooltip": {
+        "es": "Alta confianza en reportes, pero el riesgo real es alto. Monitoreo intensivo para validar.",
+        "en": "High trust in reports, but real risk is high. Intensive monitoring to validate."
+      }
+    },
+    
+    "R5-T5": {
+      "_description": "Riesgo crítico + Confianza muy alta (anomalía)",
+      "level": 3,
+      "urgency": "ALTO",
+      "review_days": 14,
+      "remediation_days": 21,
+      "improvement_target": 20.0,
+      "action": {
+        "es": "PLAN DE CONTENCIÓN: Análisis de causa raíz en 5 días. Acciones correctivas verificables.",
+        "en": "CONTAINMENT PLAN: Root cause analysis in 5 days. Verifiable corrective actions."
+      },
+      "tooltip": {
+        "es": "Confíamos en los datos pero indican riesgo alto. Posible evento atípico. Analizar causa raíz.",
+        "en": "We trust the data but it indicates high risk. Possible atypical event. Analyze root cause."
+      }
+    },
+
+    "_comment_r4": "=== RIESGO ALTO (60-80) - Fila R4 ===",
+    
+    "R4-T1": {
+      "_description": "Riesgo alto + Confianza muy baja",
+      "level": 4,
+      "urgency": "MUY_ALTO",
+      "review_days": 5,
+      "remediation_days": 60,
+      "improvement_target": 30.0,
+      "action": {
+        "es": "RESTRICCIÓN SEVERA: Operaciones limitadas. Auditoría documental completa. Plan 10 días.",
+        "en": "SEVERE RESTRICTION: Limited operations. Complete document audit. Plan in 10 days."
+      },
+      "tooltip": {
+        "es": "Riesgo alto con baja visibilidad. Priorizar regularización documental antes de evaluar operación.",
+        "en": "High risk with low visibility. Prioritize document regularization before evaluating operation."
+      }
+    },
+    
+    "R4-T2": {
+      "_description": "Riesgo alto + Confianza baja",
+      "level": 4,
+      "urgency": "ALTO",
+      "review_days": 7,
+      "remediation_days": 45,
+      "improvement_target": 25.0,
+      "action": {
+        "es": "ESCALAMIENTO CONTRACTUAL: Reunión con gerencia. Metas semanales estrictas.",
+        "en": "CONTRACTUAL ESCALATION: Meeting with management. Strict weekly goals."
+      },
+      "tooltip": {
+        "es": "Escalar a nivel gerencial del contratista. Establecer compromisos formales con fechas.",
+        "en": "Escalate to contractor management level. Establish formal commitments with dates."
+      }
+    },
+    
+    "R4-T3": {
+      "_description": "Riesgo alto + Confianza media",
+      "level": 3,
+      "urgency": "ALTO",
+      "review_days": 14,
+      "remediation_days": 30,
+      "improvement_target": 20.0,
+      "action": {
+        "es": "PLAN CORRECTIVO FORMAL: 5 acciones primarias + seguimiento bisemanal.",
+        "en": "FORMAL CORRECTIVE PLAN: 5 primary actions + biweekly follow-up."
+      },
+      "tooltip": {
+        "es": "Plan estructurado con acciones específicas. Seguimiento cada dos semanas para verificar avance.",
+        "en": "Structured plan with specific actions. Follow-up every two weeks to verify progress."
+      }
+    },
+    
+    "R4-T4": {
+      "_description": "Riesgo alto + Confianza alta",
+      "level": 3,
+      "urgency": "MEDIO_ALTO",
+      "review_days": 14,
+      "remediation_days": 21,
+      "improvement_target": 15.0,
+      "action": {
+        "es": "MEJORA GUIADA: Checklist semanal + 3 acciones críticas. Mentor HSE asignado.",
+        "en": "GUIDED IMPROVEMENT: Weekly checklist + 3 critical actions. HSE mentor assigned."
+      },
+      "tooltip": {
+        "es": "Confianza alta permite enfoque guiado. Mentor HSE para acompañamiento semanal.",
+        "en": "High trust allows guided approach. HSE mentor for weekly accompaniment."
+      }
+    },
+    
+    "R4-T5": {
+      "_description": "Riesgo alto + Confianza muy alta",
+      "level": 2,
+      "urgency": "MEDIO",
+      "review_days": 21,
+      "remediation_days": 14,
+      "improvement_target": 10.0,
+      "action": {
+        "es": "REFUERZO PREVENTIVO: Capacitación específica + verificación de controles.",
+        "en": "PREVENTIVE REINFORCEMENT: Specific training + control verification."
+      },
+      "tooltip": {
+        "es": "Evento posiblemente atípico en contratista confiable. Reforzar controles específicos.",
+        "en": "Possibly atypical event in reliable contractor. Reinforce specific controls."
+      }
+    },
+
+    "_comment_r3": "=== RIESGO MODERADO (40-60) - Fila R3 ===",
+    
+    "R3-T1": {
+      "_description": "Riesgo moderado + Confianza muy baja",
+      "level": 4,
+      "urgency": "ALTO",
+      "review_days": 7,
+      "remediation_days": 45,
+      "improvement_target": 20.0,
+      "action": {
+        "es": "INTERVENCIÓN DOCUMENTAL: Regularizar documentación en 10 días. Sin nuevas certificaciones.",
+        "en": "DOCUMENT INTERVENTION: Regularize documentation in 10 days. No new certifications."
+      },
+      "tooltip": {
+        "es": "La baja confianza impide evaluar el riesgo real. Priorizar visibilidad documental.",
+        "en": "Low trust prevents evaluating real risk. Prioritize document visibility."
+      }
+    },
+    
+    "R3-T2": {
+      "_description": "Riesgo moderado + Confianza baja",
+      "level": 3,
+      "urgency": "MEDIO_ALTO",
+      "review_days": 14,
+      "remediation_days": 30,
+      "improvement_target": 15.0,
+      "action": {
+        "es": "PLAN DE NORMALIZACIÓN: 3 acciones semanales + cierre de brechas documentales.",
+        "en": "NORMALIZATION PLAN: 3 weekly actions + closing document gaps."
+      },
+      "tooltip": {
+        "es": "Trabajar en paralelo: reducir riesgo y mejorar documentación. Acciones concretas semanales.",
+        "en": "Work in parallel: reduce risk and improve documentation. Concrete weekly actions."
+      }
+    },
+    
+    "R3-T3": {
+      "_description": "Riesgo moderado + Confianza media",
+      "level": 2,
+      "urgency": "MEDIO",
+      "review_days": 21,
+      "remediation_days": 21,
+      "improvement_target": 10.0,
+      "action": {
+        "es": "SEGUIMIENTO ESTRUCTURADO: Reunión quincenal + dashboard compartido.",
+        "en": "STRUCTURED FOLLOW-UP: Biweekly meeting + shared dashboard."
+      },
+      "tooltip": {
+        "es": "Situación manejable con seguimiento regular. Dashboard para visibilidad mutua.",
+        "en": "Manageable situation with regular follow-up. Dashboard for mutual visibility."
+      }
+    },
+    
+    "R3-T4": {
+      "_description": "Riesgo moderado + Confianza alta",
+      "level": 2,
+      "urgency": "BAJO_MEDIO",
+      "review_days": 30,
+      "remediation_days": 14,
+      "improvement_target": 8.0,
+      "action": {
+        "es": "MEJORA CONTINUA: Metas mensuales + reconocimiento por logros.",
+        "en": "CONTINUOUS IMPROVEMENT: Monthly goals + recognition for achievements."
+      },
+      "tooltip": {
+        "es": "Buen contratista con área de mejora. Enfoque positivo con metas y reconocimiento.",
+        "en": "Good contractor with improvement area. Positive approach with goals and recognition."
+      }
+    },
+    
+    "R3-T5": {
+      "_description": "Riesgo moderado + Confianza muy alta",
+      "level": 1,
+      "urgency": "BAJO",
+      "review_days": 30,
+      "remediation_days": 7,
+      "improvement_target": 5.0,
+      "action": {
+        "es": "MANTENIMIENTO: Continuar buenas prácticas. Revisión mensual estándar.",
+        "en": "MAINTENANCE: Continue good practices. Standard monthly review."
+      },
+      "tooltip": {
+        "es": "Contratista ejemplar con riesgo puntual. Mantener monitoreo estándar.",
+        "en": "Exemplary contractor with occasional risk. Maintain standard monitoring."
+      }
+    },
+
+    "_comment_r2": "=== RIESGO BAJO (20-40) - Fila R2 ===",
+    
+    "R2-T1": {
+      "_description": "Riesgo bajo + Confianza muy baja",
+      "level": 3,
+      "urgency": "MEDIO_ALTO",
+      "review_days": 14,
+      "remediation_days": 30,
+      "improvement_target": 15.0,
+      "action": {
+        "es": "CONSTRUCCIÓN DE CONFIANZA: Programa de regularización documental + capacitación.",
+        "en": "TRUST BUILDING: Document regularization program + training."
+      },
+      "tooltip": {
+        "es": "Bajo riesgo aparente pero sin visibilidad. Podría haber sub-reporte. Construir confianza.",
+        "en": "Apparent low risk but no visibility. Could be under-reporting. Build trust."
+      }
+    },
+    
+    "R2-T2": {
+      "_description": "Riesgo bajo + Confianza baja",
+      "level": 2,
+      "urgency": "MEDIO",
+      "review_days": 21,
+      "remediation_days": 21,
+      "improvement_target": 10.0,
+      "action": {
+        "es": "FORTALECIMIENTO: Mejorar consistencia en reportes + verificación mensual.",
+        "en": "STRENGTHENING: Improve report consistency + monthly verification."
+      },
+      "tooltip": {
+        "es": "Mejorar la calidad y consistencia de reportes para validar el bajo riesgo.",
+        "en": "Improve report quality and consistency to validate low risk."
+      }
+    },
+    
+    "R2-T3": {
+      "_description": "Riesgo bajo + Confianza media",
+      "level": 2,
+      "urgency": "BAJO_MEDIO",
+      "review_days": 30,
+      "remediation_days": 14,
+      "improvement_target": 7.0,
+      "action": {
+        "es": "OPTIMIZACIÓN: Identificar 2 áreas de mejora + implementar en 30 días.",
+        "en": "OPTIMIZATION: Identify 2 improvement areas + implement in 30 days."
+      },
+      "tooltip": {
+        "es": "Situación estable. Oportunidad de optimizar procesos específicos.",
+        "en": "Stable situation. Opportunity to optimize specific processes."
+      }
+    },
+    
+    "R2-T4": {
+      "_description": "Riesgo bajo + Confianza alta",
+      "level": 1,
+      "urgency": "BAJO",
+      "review_days": 30,
+      "remediation_days": 7,
+      "improvement_target": 5.0,
+      "action": {
+        "es": "ESTÁNDAR POSITIVO: Mantener nivel. Candidato a certificación interna.",
+        "en": "POSITIVE STANDARD: Maintain level. Candidate for internal certification."
+      },
+      "tooltip": {
+        "es": "Buen desempeño. Considerar para certificaciones y reconocimientos internos.",
+        "en": "Good performance. Consider for internal certifications and recognitions."
+      }
+    },
+    
+    "R2-T5": {
+      "_description": "Riesgo bajo + Confianza muy alta",
+      "level": 1,
+      "urgency": "MUY_BAJO",
+      "review_days": 45,
+      "remediation_days": 0,
+      "improvement_target": 0.0,
+      "action": {
+        "es": "EJEMPLAR: Compartir buenas prácticas. Considerar para mentorías.",
+        "en": "EXEMPLARY: Share good practices. Consider for mentoring."
+      },
+      "tooltip": {
+        "es": "Contratista modelo. Sus prácticas pueden servir de ejemplo para otros.",
+        "en": "Model contractor. Their practices can serve as example for others."
+      }
+    },
+
+    "_comment_r1": "=== RIESGO MUY BAJO (0-20) - Fila R1 ===",
+    
+    "R1-T1": {
+      "_description": "Riesgo muy bajo + Confianza muy baja (anomalía)",
+      "level": 3,
+      "urgency": "MEDIO",
+      "review_days": 21,
+      "remediation_days": 30,
+      "improvement_target": 20.0,
+      "action": {
+        "es": "ANOMALÍA DOCUMENTAL: Bajo riesgo pero baja confianza. Regularizar documentación.",
+        "en": "DOCUMENT ANOMALY: Low risk but low trust. Regularize documentation."
+      },
+      "tooltip": {
+        "es": "Combinación inusual. El bajo riesgo podría ser por falta de reporte. Investigar.",
+        "en": "Unusual combination. Low risk could be due to lack of reporting. Investigate."
+      }
+    },
+    
+    "R1-T2": {
+      "_description": "Riesgo muy bajo + Confianza baja",
+      "level": 2,
+      "urgency": "BAJO_MEDIO",
+      "review_days": 30,
+      "remediation_days": 21,
+      "improvement_target": 10.0,
+      "action": {
+        "es": "POTENCIAL OCULTO: Mejorar visibilidad y reportes para validar bajo riesgo.",
+        "en": "HIDDEN POTENTIAL: Improve visibility and reports to validate low risk."
+      },
+      "tooltip": {
+        "es": "Posiblemente buen contratista con reportes deficientes. Mejorar visibilidad.",
+        "en": "Possibly good contractor with poor reporting. Improve visibility."
+      }
+    },
+    
+    "R1-T3": {
+      "_description": "Riesgo muy bajo + Confianza media",
+      "level": 1,
+      "urgency": "BAJO",
+      "review_days": 45,
+      "remediation_days": 7,
+      "improvement_target": 5.0,
+      "action": {
+        "es": "BUEN CAMINO: Pequeños ajustes de proceso. Revisión trimestral.",
+        "en": "ON TRACK: Minor process adjustments. Quarterly review."
+      },
+      "tooltip": {
+        "es": "Buen desempeño general. Pequeños ajustes para alcanzar excelencia.",
+        "en": "Good overall performance. Minor adjustments to reach excellence."
+      }
+    },
+    
+    "R1-T4": {
+      "_description": "Riesgo muy bajo + Confianza alta",
+      "level": 1,
+      "urgency": "MUY_BAJO",
+      "review_days": 60,
+      "remediation_days": 0,
+      "improvement_target": 0.0,
+      "action": {
+        "es": "SÓLIDO: Mantener estándares. Revisión bimestral.",
+        "en": "SOLID: Maintain standards. Bimonthly review."
+      },
+      "tooltip": {
+        "es": "Excelente desempeño. Reducir frecuencia de revisión a bimestral.",
+        "en": "Excellent performance. Reduce review frequency to bimonthly."
+      }
+    },
+    
+    "R1-T5": {
+      "_description": "Riesgo muy bajo + Confianza muy alta (mejor escenario)",
+      "level": 1,
+      "urgency": "MINIMO",
+      "review_days": 90,
+      "remediation_days": 0,
+      "improvement_target": 0.0,
+      "action": {
+        "es": "EXCELENCIA: Modelo a seguir. Candidato a proveedor estratégico.",
+        "en": "EXCELLENCE: Role model. Candidate for strategic supplier."
+      },
+      "tooltip": {
+        "es": "Mejor escenario posible. Considerar alianza estratégica a largo plazo.",
+        "en": "Best possible scenario. Consider long-term strategic alliance."
+      }
+    }
+  },
+
+  "remediation_tasks": {
+    "_comment": "Catálogo de tareas de remediación por nivel de urgencia",
+    
+    "CRITICO": [
+      {
+        "id": "CRIT_001",
+        "description": {"es": "Suspender todas las operaciones de alto riesgo inmediatamente", "en": "Suspend all high-risk operations immediately"},
+        "priority": "URGENTE",
+        "deadline_days": 1,
+        "category": "OPERACIONAL",
+        "weight": 15.0,
+        "tooltip": {"es": "Acción inmediata para detener exposición al riesgo", "en": "Immediate action to stop risk exposure"}
+      },
+      {
+        "id": "CRIT_002",
+        "description": {"es": "Realizar auditoría de seguridad completa por tercero independiente", "en": "Perform complete safety audit by independent third party"},
+        "priority": "URGENTE",
+        "deadline_days": 7,
+        "category": "VERIFICACION",
+        "weight": 20.0,
+        "tooltip": {"es": "Auditoría externa para visión objetiva del estado HSE", "en": "External audit for objective view of HSE status"}
+      },
+      {
+        "id": "CRIT_003",
+        "description": {"es": "Implementar supervisor HSE dedicado tiempo completo", "en": "Implement full-time dedicated HSE supervisor"},
+        "priority": "URGENTE",
+        "deadline_days": 3,
+        "category": "OPERACIONAL",
+        "weight": 10.0,
+        "tooltip": {"es": "Recurso dedicado para monitoreo continuo", "en": "Dedicated resource for continuous monitoring"}
+      },
+      {
+        "id": "CRIT_004",
+        "description": {"es": "Capacitación de emergencia para todo el personal (8h mínimo)", "en": "Emergency training for all personnel (8h minimum)"},
+        "priority": "ALTA",
+        "deadline_days": 5,
+        "category": "FORMACION",
+        "weight": 8.0,
+        "tooltip": {"es": "Refuerzo inmediato de conocimientos de seguridad", "en": "Immediate reinforcement of safety knowledge"}
+      },
+      {
+        "id": "CRIT_005",
+        "description": {"es": "Actualizar matriz de riesgos y controles críticos", "en": "Update risk matrix and critical controls"},
+        "priority": "ALTA",
+        "deadline_days": 7,
+        "category": "DOCUMENTAL",
+        "weight": 7.0,
+        "tooltip": {"es": "Revisar y actualizar identificación de riesgos", "en": "Review and update risk identification"}
+      },
+      {
+        "id": "CRIT_006",
+        "description": {"es": "Implementar sistema de reporte diario de incidentes", "en": "Implement daily incident reporting system"},
+        "priority": "ALTA",
+        "deadline_days": 3,
+        "category": "DOCUMENTAL",
+        "weight": 5.0,
+        "tooltip": {"es": "Asegurar visibilidad inmediata de cualquier evento", "en": "Ensure immediate visibility of any event"}
+      }
+    ],
+    
+    "MUY_ALTO": [
+      {
+        "id": "ALTO_001",
+        "description": {"es": "Revisar y actualizar todos los procedimientos de trabajo seguro", "en": "Review and update all safe work procedures"},
+        "priority": "ALTA",
+        "deadline_days": 14,
+        "category": "DOCUMENTAL",
+        "weight": 12.0,
+        "tooltip": {"es": "Asegurar que procedimientos reflejan mejores prácticas", "en": "Ensure procedures reflect best practices"}
+      },
+      {
+        "id": "ALTO_002",
+        "description": {"es": "Realizar inspecciones no programadas 2x por semana", "en": "Perform unannounced inspections 2x per week"},
+        "priority": "ALTA",
+        "deadline_days": 7,
+        "category": "VERIFICACION",
+        "weight": 8.0,
+        "tooltip": {"es": "Verificar cumplimiento en condiciones reales", "en": "Verify compliance in real conditions"}
+      },
+      {
+        "id": "ALTO_003",
+        "description": {"es": "Cerrar todas las acciones correctivas vencidas", "en": "Close all overdue corrective actions"},
+        "priority": "URGENTE",
+        "deadline_days": 5,
+        "category": "OPERACIONAL",
+        "weight": 10.0,
+        "tooltip": {"es": "Eliminar backlog de acciones pendientes", "en": "Eliminate backlog of pending actions"}
+      },
+      {
+        "id": "ALTO_004",
+        "description": {"es": "Capacitación reforzada en áreas de mayor incidencia", "en": "Reinforced training in highest incident areas"},
+        "priority": "ALTA",
+        "deadline_days": 10,
+        "category": "FORMACION",
+        "weight": 6.0,
+        "tooltip": {"es": "Focalizar capacitación donde más se necesita", "en": "Focus training where most needed"}
+      },
+      {
+        "id": "ALTO_005",
+        "description": {"es": "Reunión semanal de seguimiento con gerencia", "en": "Weekly follow-up meeting with management"},
+        "priority": "MEDIA",
+        "deadline_days": 7,
+        "category": "OPERACIONAL",
+        "weight": 4.0,
+        "tooltip": {"es": "Mantener compromiso gerencial visible", "en": "Maintain visible management commitment"}
+      }
+    ],
+    
+    "ALTO": [
+      {
+        "id": "MED_001",
+        "description": {"es": "Completar documentación faltante de procedimientos", "en": "Complete missing procedure documentation"},
+        "priority": "ALTA",
+        "deadline_days": 14,
+        "category": "DOCUMENTAL",
+        "weight": 8.0,
+        "tooltip": {"es": "Cerrar brechas documentales identificadas", "en": "Close identified document gaps"}
+      },
+      {
+        "id": "MED_002",
+        "description": {"es": "Implementar programa de observaciones de seguridad", "en": "Implement safety observation program"},
+        "priority": "MEDIA",
+        "deadline_days": 21,
+        "category": "OPERACIONAL",
+        "weight": 6.0,
+        "tooltip": {"es": "Programa proactivo de identificación de riesgos", "en": "Proactive risk identification program"}
+      },
+      {
+        "id": "MED_003",
+        "description": {"es": "Realizar simulacro de emergencia", "en": "Conduct emergency drill"},
+        "priority": "MEDIA",
+        "deadline_days": 14,
+        "category": "FORMACION",
+        "weight": 5.0,
+        "tooltip": {"es": "Validar preparación ante emergencias", "en": "Validate emergency preparedness"}
+      },
+      {
+        "id": "MED_004",
+        "description": {"es": "Verificar certificaciones vigentes del personal", "en": "Verify current personnel certifications"},
+        "priority": "ALTA",
+        "deadline_days": 7,
+        "category": "DOCUMENTAL",
+        "weight": 7.0,
+        "tooltip": {"es": "Asegurar competencias documentadas y vigentes", "en": "Ensure documented and current competencies"}
+      }
+    ],
+    
+    "MEDIO_ALTO": [
+      {
+        "id": "MEDALT_001",
+        "description": {"es": "Actualizar plan de capacitación anual", "en": "Update annual training plan"},
+        "priority": "MEDIA",
+        "deadline_days": 21,
+        "category": "FORMACION",
+        "weight": 5.0,
+        "tooltip": {"es": "Planificar desarrollo de competencias", "en": "Plan competency development"}
+      },
+      {
+        "id": "MEDALT_002",
+        "description": {"es": "Revisar indicadores proactivos mensualmente", "en": "Review proactive indicators monthly"},
+        "priority": "MEDIA",
+        "deadline_days": 30,
+        "category": "DOCUMENTAL",
+        "weight": 4.0,
+        "tooltip": {"es": "Monitorear señales tempranas de riesgo", "en": "Monitor early risk signals"}
+      },
+      {
+        "id": "MEDALT_003",
+        "description": {"es": "Implementar reconocimiento por comportamiento seguro", "en": "Implement recognition for safe behavior"},
+        "priority": "BAJA",
+        "deadline_days": 30,
+        "category": "OPERACIONAL",
+        "weight": 3.0,
+        "tooltip": {"es": "Refuerzo positivo para cultura de seguridad", "en": "Positive reinforcement for safety culture"}
+      }
+    ],
+    
+    "MEDIO": [
+      {
+        "id": "MED_NORM_001",
+        "description": {"es": "Mantener cierres mensuales al día", "en": "Keep monthly closes up to date"},
+        "priority": "MEDIA",
+        "deadline_days": 30,
+        "category": "DOCUMENTAL",
+        "weight": 4.0,
+        "tooltip": {"es": "Consistencia en reportes mensuales", "en": "Consistency in monthly reports"}
+      },
+      {
+        "id": "MED_NORM_002",
+        "description": {"es": "Participar en comité HSE mensual", "en": "Participate in monthly HSE committee"},
+        "priority": "BAJA",
+        "deadline_days": 30,
+        "category": "OPERACIONAL",
+        "weight": 3.0,
+        "tooltip": {"es": "Mantener comunicación activa con HSE", "en": "Maintain active communication with HSE"}
+      }
+    ],
+    
+    "BAJO_MEDIO": [
+      {
+        "id": "BAJO_001",
+        "description": {"es": "Continuar con mejora continua según plan anual", "en": "Continue with continuous improvement per annual plan"},
+        "priority": "BAJA",
+        "deadline_days": 45,
+        "category": "OPERACIONAL",
+        "weight": 2.0,
+        "tooltip": {"es": "Mantener momentum de mejora", "en": "Maintain improvement momentum"}
+      }
+    ],
+    
+    "BAJO": [
+      {
+        "id": "MIN_001",
+        "description": {"es": "Revisión trimestral de indicadores", "en": "Quarterly indicator review"},
+        "priority": "BAJA",
+        "deadline_days": 90,
+        "category": "DOCUMENTAL",
+        "weight": 1.0,
+        "tooltip": {"es": "Monitoreo de bajo esfuerzo para contratistas estables", "en": "Low-effort monitoring for stable contractors"}
+      }
+    ],
+    
+    "MUY_BAJO": [],
+    "MINIMO": []
+  }
+}

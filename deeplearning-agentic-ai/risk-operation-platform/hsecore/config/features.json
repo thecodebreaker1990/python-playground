@@ -1,0 +1,459 @@
+{
+  "_documentation": {
+    "file": "features.json",
+    "version": "2.0",
+    "description": "Configuración de variables para el modelo de scoring HSE (Health Safety Environment)",
+    "usage": "Este archivo define todas las variables que alimentan el modelo de scoring. Cada feature representa una métrica que influye en el Risk Score o Trust Score del contratista.",
+    "how_to_extend": [
+      "1. Agregue un nuevo objeto en el array 'features'",
+      "2. Defina 'name' único (identificador interno)",
+      "3. Defina 'column' (nombre de columna en datos CSV/DB)",
+      "4. Elija 'category': RISK (aumenta riesgo) o TRUST (aumenta confianza)",
+      "5. Asigne 'weight' entre 0.0 y 1.0 (los weights por categoría deben sumar ~1.0)",
+      "6. Defina 'direction': NEGATIVE (mayor valor = peor) o POSITIVE (mayor valor = mejor)",
+      "7. Elija 'normalization' apropiada según distribución de datos"
+    ],
+    "field_definitions": {
+      "name": "Identificador único interno de la variable",
+      "column": "Nombre de la columna en el CSV o base de datos origen",
+      "description": "Descripción legible para humanos",
+      "type": "Tipo de dato: COUNT|RATE|FLAG|RATIO|PERCENTAGE|DAYS|SCORE|CURRENCY|CUSTOM",
+      "category": "RISK (penaliza score), TRUST (bonifica score), BOTH, PENALTY",
+      "weight": "Peso relativo 0.0-1.0, suma de weights por categoría debe ser ~1.0",
+      "direction": "NEGATIVE (mayor=peor) o POSITIVE (mayor=mejor)",
+      "normalization": "LINEAR, LOGARITHMIC, SIGMOID, STEP, INVERSE, NONE",
+      "min_value": "Valor mínimo esperado (null = sin límite)",
+      "max_value": "Valor máximo esperado (null = sin límite)",
+      "cap": "Tope superior para outliers (null = sin tope)",
+      "floor": "Piso mínimo (null = sin piso)",
+      "missing_strategy": "ZERO, NEUTRAL, PENALIZE, DEFAULT, EXCLUDE",
+      "default_value": "Valor por defecto si falta el dato",
+      "thresholds": "Array de cortes para crear bandas [t1, t2, t3, t4] generan 5 bandas",
+      "labels": "Etiquetas para cada banda creada por thresholds",
+      "group": "Agrupación lógica: safety, compliance, operational, financial, reputational",
+      "enabled": "true/false para activar/desactivar sin borrar",
+      "metadata": "Datos adicionales libres (fuente, frecuencia, etc.)"
+    },
+    "weight_guidelines": {
+      "RISK_weights": "Deben sumar aproximadamente 1.0 entre todas las variables RISK",
+      "TRUST_weights": "Deben sumar aproximadamente 1.0 entre todas las variables TRUST",
+      "importance": {
+        "0.20-0.25": "Crítico - Variable con máximo impacto",
+        "0.15-0.19": "Alto - Variable muy importante",
+        "0.10-0.14": "Moderado - Variable significativa",
+        "0.05-0.09": "Bajo - Variable complementaria",
+        "0.01-0.04": "Mínimo - Variable de ajuste fino"
+      }
+    },
+    "normalization_guide": {
+      "LINEAR": "Para datos uniformemente distribuidos con límites claros",
+      "LOGARITHMIC": "Para datos con distribución exponencial o outliers frecuentes",
+      "SIGMOID": "Para datos que deben saturar en extremos (curva S)",
+      "STEP": "Para datos categóricos usando thresholds",
+      "INVERSE": "Para datos donde menor valor = mayor impacto",
+      "NONE": "Para scores ya normalizados 0-100"
+    }
+  },
+
+  "version": "2.0",
+  "created": "2025-01-01",
+  "last_modified": "2025-01-01",
+  
+  "features": [
+    {
+      "_comment": "=== VARIABLES DE RIESGO HSE (Health Safety Environment) ===",
+      "_group_description": "Métricas que aumentan el Risk Score del contratista. Mayor valor = Mayor riesgo."
+    },
+    
+    {
+      "_comment": "RECORDABLES: Incidentes OSHA registrables. Métrica fundamental de seguridad.",
+      "name": "recordables",
+      "column": "recordables",
+      "description": "Incidentes registrables OSHA en los últimos 12 meses",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.25,
+      "direction": "NEGATIVE",
+      "normalization": "LOGARITHMIC",
+      "min_value": 0,
+      "max_value": 10,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "PENALIZE",
+      "default_value": 0,
+      "thresholds": [0, 1, 3, 5],
+      "labels": ["Excelente", "Bueno", "Atención", "Alto", "Crítico"],
+      "group": "safety",
+      "enabled": true,
+      "metadata": {
+        "source": "monthly_hse_report",
+        "osha_definition": "Work-related injuries and illnesses that must be recorded"
+      }
+    },
+
+    {
+      "_comment": "LTI: Lost Time Injuries. Lesiones que causan pérdida de días laborales.",
+      "name": "lti",
+      "column": "lti_count",
+      "description": "Lesiones con tiempo perdido (Lost Time Injuries)",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.20,
+      "direction": "NEGATIVE",
+      "normalization": "LOGARITHMIC",
+      "min_value": 0,
+      "max_value": 5,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "PENALIZE",
+      "default_value": 0,
+      "thresholds": [0, 1, 2, 3],
+      "labels": ["Cero LTI", "Bajo", "Moderado", "Alto", "Crítico"],
+      "group": "safety",
+      "enabled": true,
+      "metadata": {}
+    },
+
+    {
+      "_comment": "HIPO: High Potential incidents. Casi-accidentes con potencial de fatalidad.",
+      "name": "hipo",
+      "column": "hipo_events",
+      "description": "Eventos de Alto Potencial (High Potential incidents)",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.15,
+      "direction": "NEGATIVE",
+      "normalization": "LINEAR",
+      "min_value": 0,
+      "max_value": 5,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [0, 1, 2, 3],
+      "labels": ["Cero HIPO", "Alerta", "Moderado", "Alto", "Crítico"],
+      "group": "safety",
+      "enabled": true,
+      "metadata": {
+        "definition": "Incidents that could have resulted in fatality or permanent disability"
+      }
+    },
+
+    {
+      "_comment": "HALLAZGOS CRÍTICOS VENCIDOS: Observaciones críticas no resueltas fuera de plazo.",
+      "name": "critical_overdue",
+      "column": "critical_findings_overdue",
+      "description": "Hallazgos críticos de auditoría vencidos",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.10,
+      "direction": "NEGATIVE",
+      "normalization": "LINEAR",
+      "min_value": 0,
+      "max_value": 10,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [0, 2, 4, 6],
+      "labels": ["Al día", "Leve", "Moderado", "Alto", "Crítico"],
+      "group": "compliance",
+      "enabled": true,
+      "metadata": {}
+    },
+
+    {
+      "_comment": "CIERRES MENSUALES FALTANTES: Indica falta de disciplina en reportes.",
+      "name": "missing_monthly_close",
+      "column": "monthly_close_missing",
+      "description": "Cierres mensuales faltantes",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.10,
+      "direction": "NEGATIVE",
+      "normalization": "LINEAR",
+      "min_value": 0,
+      "max_value": 3,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [0, 1, 2, 3],
+      "labels": ["Completo", "Falta 1", "Falta 2", "Falta 3", "Sin reportes"],
+      "group": "compliance",
+      "enabled": true,
+      "metadata": {}
+    },
+
+    {
+      "_comment": "=== VARIABLES DE RIESGO FINANCIERO ===",
+      "_group_description": "Métricas que evalúan la solidez económica del contratista."
+    },
+
+    {
+      "_comment": "RIESGO FINANCIERO: Score consolidado de salud financiera. Fuente: bureau o análisis interno.",
+      "name": "financial_risk",
+      "column": "financial_risk_score",
+      "description": "Score de riesgo financiero del contratista (deudas, impagos, liquidez)",
+      "type": "SCORE",
+      "category": "RISK",
+      "weight": 0.12,
+      "direction": "NEGATIVE",
+      "normalization": "NONE",
+      "min_value": 0,
+      "max_value": 100,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "NEUTRAL",
+      "default_value": 50,
+      "thresholds": [20, 40, 60, 80],
+      "labels": ["Sólido", "Estable", "Moderado", "Alto", "Crítico"],
+      "group": "financial",
+      "enabled": true,
+      "metadata": {
+        "source": "bureau_financiero",
+        "update_frequency": "monthly",
+        "components": [
+          "ratio_deuda_patrimonio",
+          "liquidez_corriente", 
+          "historial_pagos",
+          "calificacion_crediticia"
+        ],
+        "interpretation": "Score 0-100 donde 0=mínimo riesgo, 100=máximo riesgo"
+      }
+    },
+
+    {
+      "_comment": "RETRASOS EN PAGOS: Días promedio de mora con proveedores. Señal de liquidez.",
+      "name": "payment_delays",
+      "column": "avg_payment_delay_days",
+      "description": "Promedio de días de retraso en pagos a proveedores",
+      "type": "DAYS",
+      "category": "RISK",
+      "weight": 0.08,
+      "direction": "NEGATIVE",
+      "normalization": "LOGARITHMIC",
+      "min_value": 0,
+      "max_value": 90,
+      "cap": 90,
+      "floor": 0,
+      "missing_strategy": "NEUTRAL",
+      "default_value": 0,
+      "thresholds": [15, 30, 45, 60],
+      "labels": ["A tiempo", "Leve", "Moderado", "Severo", "Crítico"],
+      "group": "financial",
+      "enabled": true,
+      "metadata": {
+        "source": "accounts_payable_system",
+        "interpretation": "0 días=pago puntual, >60 días=riesgo alto de problemas financieros"
+      }
+    },
+
+    {
+      "_comment": "=== VARIABLES DE RIESGO REPUTACIONAL ===",
+      "_group_description": "Métricas de imagen pública, prensa y riesgo legal."
+    },
+
+    {
+      "_comment": "RIESGO REPUTACIONAL: Score consolidado de percepción pública.",
+      "name": "reputational_risk",
+      "column": "reputation_score",
+      "description": "Score de riesgo reputacional (prensa negativa, redes sociales, demandas públicas)",
+      "type": "SCORE",
+      "category": "RISK",
+      "weight": 0.10,
+      "direction": "NEGATIVE",
+      "normalization": "NONE",
+      "min_value": 0,
+      "max_value": 100,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "NEUTRAL",
+      "default_value": 50,
+      "thresholds": [20, 40, 60, 80],
+      "labels": ["Excelente", "Buena", "Neutral", "Negativa", "Crisis"],
+      "group": "reputational",
+      "enabled": true,
+      "metadata": {
+        "source": "media_monitoring",
+        "includes": ["news", "social_media", "legal", "regulatory"],
+        "components": [
+          "sentiment_score",
+          "media_reach",
+          "issue_severity",
+          "crisis_history"
+        ],
+        "interpretation": "Score 0-100 donde 0=excelente reputación, 100=crisis reputacional"
+      }
+    },
+
+    {
+      "_comment": "MENCIONES NEGATIVAS: Cantidad de noticias desfavorables en últimos 12 meses.",
+      "name": "negative_media_mentions",
+      "column": "negative_news_count",
+      "description": "Cantidad de menciones negativas en medios en últimos 12 meses",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.06,
+      "direction": "NEGATIVE",
+      "normalization": "LOGARITHMIC",
+      "min_value": 0,
+      "max_value": 50,
+      "cap": 50,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [2, 5, 10, 20],
+      "labels": ["Ninguna", "Aisladas", "Moderadas", "Frecuentes", "Crisis"],
+      "group": "reputational",
+      "enabled": true,
+      "metadata": {
+        "source": "news_scraping_service",
+        "keywords_tracked": ["accidente", "demanda", "sanción", "multa", "escándalo"],
+        "interpretation": "0=sin menciones negativas, >20=alto riesgo reputacional"
+      }
+    },
+
+    {
+      "_comment": "DEMANDAS ACTIVAS: Procesos legales pendientes (laborales, ambientales, civiles).",
+      "name": "active_lawsuits",
+      "column": "pending_lawsuits",
+      "description": "Demandas laborales o ambientales activas",
+      "type": "COUNT",
+      "category": "RISK",
+      "weight": 0.08,
+      "direction": "NEGATIVE",
+      "normalization": "LINEAR",
+      "min_value": 0,
+      "max_value": 10,
+      "cap": 10,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [1, 2, 4, 6],
+      "labels": ["Ninguna", "Baja", "Moderada", "Alta", "Muy Alta"],
+      "group": "reputational",
+      "enabled": true,
+      "metadata": {
+        "source": "legal_department",
+        "types_included": ["laboral", "ambiental", "civil", "regulatorio"],
+        "interpretation": "0=sin demandas, >6=riesgo legal significativo"
+      }
+    },
+
+    {
+      "_comment": "=== VARIABLES DE CONFIANZA (TRUST) ===",
+      "_group_description": "Métricas que aumentan el Trust Score. Mayor valor = Mayor confianza."
+    },
+
+    {
+      "_comment": "RATE DE CUMPLIMIENTO: % de observaciones cerradas a tiempo. Disciplina operativa.",
+      "name": "close_rate",
+      "column": "observation_close_rate",
+      "description": "Tasa de cierre de observaciones",
+      "type": "PERCENTAGE",
+      "category": "TRUST",
+      "weight": 0.30,
+      "direction": "POSITIVE",
+      "normalization": "LINEAR",
+      "min_value": 0,
+      "max_value": 100,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "NEUTRAL",
+      "default_value": 50,
+      "thresholds": [60, 75, 85, 95],
+      "labels": ["Crítico", "Bajo", "Aceptable", "Bueno", "Excelente"],
+      "group": "compliance",
+      "enabled": true,
+      "metadata": {}
+    },
+
+    {
+      "_comment": "PROACTIVIDAD: Reportes voluntarios de casi-accidentes.",
+      "name": "proactive_reports",
+      "column": "proactive_hazard_reports",
+      "description": "Reportes proactivos de peligros/cuasi accidentes",
+      "type": "COUNT",
+      "category": "TRUST",
+      "weight": 0.25,
+      "direction": "POSITIVE",
+      "normalization": "LOGARITHMIC",
+      "min_value": 0,
+      "max_value": 50,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [0, 5, 15, 30],
+      "labels": ["Sin reportes", "Bajo", "Moderado", "Alto", "Excelente"],
+      "group": "operational",
+      "enabled": true,
+      "metadata": {}
+    },
+
+    {
+      "_comment": "HORAS DE CAPACITACIÓN: Inversión en entrenamiento por trabajador.",
+      "name": "training_hours",
+      "column": "training_hours_per_capita",
+      "description": "Horas de capacitación HSE por trabajador",
+      "type": "DAYS",
+      "category": "TRUST",
+      "weight": 0.25,
+      "direction": "POSITIVE",
+      "normalization": "LINEAR",
+      "min_value": 0,
+      "max_value": 40,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "ZERO",
+      "default_value": 0,
+      "thresholds": [5, 10, 20, 30],
+      "labels": ["Insuficiente", "Bajo", "Aceptable", "Bueno", "Excelente"],
+      "group": "operational",
+      "enabled": true,
+      "metadata": {}
+    },
+
+    {
+      "_comment": "SCORE DE AUDITORÍA: Calificación en última auditoría de seguridad.",
+      "name": "audit_score",
+      "column": "last_audit_score",
+      "description": "Puntuación de última auditoría de seguridad",
+      "type": "SCORE",
+      "category": "TRUST",
+      "weight": 0.20,
+      "direction": "POSITIVE",
+      "normalization": "NONE",
+      "min_value": 0,
+      "max_value": 100,
+      "cap": null,
+      "floor": 0,
+      "missing_strategy": "NEUTRAL",
+      "default_value": 50,
+      "thresholds": [60, 75, 85, 95],
+      "labels": ["Reprobado", "Bajo", "Aceptable", "Bueno", "Excelente"],
+      "group": "compliance",
+      "enabled": true,
+      "metadata": {}
+    }
+  ],
+
+  "_summary": {
+    "total_features": 15,
+    "risk_features": 11,
+    "trust_features": 4,
+    "groups": {
+      "safety": ["recordables", "lti", "hipo"],
+      "compliance": ["critical_overdue", "missing_monthly_close", "close_rate", "audit_score"],
+      "operational": ["proactive_reports", "training_hours"],
+      "financial": ["financial_risk", "payment_delays"],
+      "reputational": ["reputational_risk", "negative_media_mentions", "active_lawsuits"]
+    },
+    "weight_totals": {
+      "RISK": "~1.24 (ajustar según prioridades del negocio)",
+      "TRUST": "1.00"
+    },
+    "notes": "Las variables RISK suman >1.0 porque incluye nuevos grupos (financial, reputational). Ajustar weights según importancia relativa para el negocio."
+  }
+}

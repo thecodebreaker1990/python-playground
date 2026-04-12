@@ -1,0 +1,266 @@
+{
+  "count": 5,
+  "results": [
+    {
+      "contractor": "Acme Industrial Solutions",
+      "month": "2026-03",
+      "scores": {
+        "risk": 40.9,
+        "trust": 75.0,
+        "stability": 38.7,
+        "severity_adjusted": 50.0
+      },
+      "buckets": {
+        "risk": "MOD",
+        "trust": "HIGH",
+        "cell_5x5": "R3-T4"
+      },
+      "gate_status": "BLOCKED",
+      "escalation": {
+        "level": 2,
+        "action": "MEJORA CONTINUA: Metas mensuales + reconocimiento por logros."
+      },
+      "drivers": [
+        "base ↑",
+        "critical_overdue ↑",
+        "event_rate_per_1000h ↑"
+      ],
+      "predictions": {
+        "probability_incident_30d_pct": 68.9,
+        "recommended_review_days": 30
+      },
+      "time_penalty": {
+        "days_without_report": 0,
+        "days_in_critical": 0,
+        "cumulative_penalty": 15.5,
+        "penalty_reason": "4 acciones críticas vencidas (+12.0) | Backlog de 12 acciones (+3.5)",
+        "decay_rate": 0.15
+      },
+      "improvement_signal": {
+        "trend_direction": "WORSENING",
+        "improvement_score": -63.692307692307686,
+        "consecutive_good_months": 0,
+        "milestones_achieved": [],
+        "next_milestone": "Completar 1 mes sin incidentes",
+        "days_to_milestone": 30
+      },
+      "remediation_plan": {
+        "target_risk_reduction": 8.0,
+        "target_trust_increase": 0.0,
+        "max_days": 14,
+        "checkpoints": [
+          7,
+          14
+        ],
+        "expected_improvement_per_checkpoint_pct": 4.0,
+        "tasks": []
+      }
+    },
+    {
+      "contractor": "Globex International",
+      "month": "2026-03",
+      "scores": {
+        "risk": 0.8,
+        "trust": 75.0,
+        "stability": 11.7,
+        "severity_adjusted": 10.5
+      },
+      "buckets": {
+        "risk": "LOW",
+        "trust": "HIGH",
+        "cell_5x5": "R1-T4"
+      },
+      "gate_status": "OK",
+      "escalation": {
+        "level": 1,
+        "action": "SÓLIDO: Mantener estándares. Revisión bimestral."
+      },
+      "drivers": [
+        "base ↑",
+        "consistent_closes_bonus ↑",
+        "actions_overdue ↑"
+      ],
+      "predictions": {
+        "probability_incident_30d_pct": 6.2,
+        "recommended_review_days": 60
+      },
+      "time_penalty": {
+        "days_without_report": 0,
+        "days_in_critical": 0,
+        "cumulative_penalty": 0.0,
+        "penalty_reason": "Sin penalización",
+        "decay_rate": 0.15
+      },
+      "improvement_signal": {
+        "trend_direction": "STABLE",
+        "improvement_score": 0.0,
+        "consecutive_good_months": 3,
+        "milestones_achieved": [
+          "1 mes sin incidentes",
+          "3 meses consecutivos OK"
+        ],
+        "next_milestone": "Completar semestre sin incidentes",
+        "days_to_milestone": 90
+      },
+      "remediation_plan": null
+    },
+    {
+      "contractor": "Cyberdyne Systems",
+      "month": "2026-03",
+      "scores": {
+        "risk": 5.9,
+        "trust": 30.0,
+        "stability": 34.7,
+        "severity_adjusted": 34.5
+      },
+      "buckets": {
+        "risk": "LOW",
+        "trust": "LOW",
+        "cell_5x5": "R1-T2"
+      },
+      "gate_status": "OK",
+      "escalation": {
+        "level": 2,
+        "action": "POTENCIAL OCULTO: Mejorar visibilidad y reportes para validar bajo riesgo."
+      },
+      "drivers": [
+        "base ↑",
+        "missing_monthly_close ↓",
+        "rejected_reports ↓"
+      ],
+      "predictions": {
+        "probability_incident_30d_pct": 3.7,
+        "recommended_review_days": 30
+      },
+      "time_penalty": {
+        "days_without_report": 0,
+        "days_in_critical": 0,
+        "cumulative_penalty": 3.0,
+        "penalty_reason": "1 acciones críticas vencidas (+3.0)",
+        "decay_rate": 0.15
+      },
+      "improvement_signal": {
+        "trend_direction": "STABLE",
+        "improvement_score": 0.0,
+        "consecutive_good_months": 0,
+        "milestones_achieved": [],
+        "next_milestone": "Completar 1 mes sin incidentes",
+        "days_to_milestone": 30
+      },
+      "remediation_plan": {
+        "target_risk_reduction": 0.0,
+        "target_trust_increase": 10.0,
+        "max_days": 21,
+        "checkpoints": [
+          7,
+          14,
+          21
+        ],
+        "expected_improvement_per_checkpoint_pct": 3.3333333333333335,
+        "tasks": []
+      }
+    },
+    {
+      "contractor": "Apex Heavy Industries",
+      "month": "2026-03",
+      "scores": {
+        "risk": 33.4,
+        "trust": 67.5,
+        "stability": 33.0,
+        "severity_adjusted": 56.5
+      },
+      "buckets": {
+        "risk": "LOW",
+        "trust": "MED",
+        "cell_5x5": "R2-T4"
+      },
+      "gate_status": "AT_RISK",
+      "escalation": {
+        "level": 1,
+        "action": "ESTÁNDAR POSITIVO: Mantener nivel. Candidato a certificación interna."
+      },
+      "drivers": [
+        "base ↑",
+        "critical_overdue ↑",
+        "actions_overdue ↑"
+      ],
+      "predictions": {
+        "probability_incident_30d_pct": 87.1,
+        "recommended_review_days": 30
+      },
+      "time_penalty": {
+        "days_without_report": 0,
+        "days_in_critical": 0,
+        "cumulative_penalty": 23.5,
+        "penalty_reason": "6 acciones críticas vencidas (+18.0) | Backlog de 16 acciones (+5.5)",
+        "decay_rate": 0.15
+      },
+      "improvement_signal": {
+        "trend_direction": "IMPROVING",
+        "improvement_score": 80.38631346578364,
+        "consecutive_good_months": 0,
+        "milestones_achieved": [],
+        "next_milestone": "Completar 1 mes sin incidentes",
+        "days_to_milestone": 30
+      },
+      "remediation_plan": {
+        "target_risk_reduction": 0.0,
+        "target_trust_increase": 0.0,
+        "max_days": 7,
+        "checkpoints": [
+          7
+        ],
+        "expected_improvement_per_checkpoint_pct": 5.0,
+        "tasks": []
+      }
+    },
+    {
+      "contractor": "Sinergy Managed Services",
+      "month": "2026-03",
+      "scores": {
+        "risk": 0.8,
+        "trust": 75.0,
+        "stability": 11.7,
+        "severity_adjusted": 10.5
+      },
+      "buckets": {
+        "risk": "LOW",
+        "trust": "HIGH",
+        "cell_5x5": "R1-T4"
+      },
+      "gate_status": "OK",
+      "escalation": {
+        "level": 1,
+        "action": "SÓLIDO: Mantener estándares. Revisión bimestral."
+      },
+      "drivers": [
+        "base ↑",
+        "consistent_closes_bonus ↑",
+        "actions_overdue ↑"
+      ],
+      "predictions": {
+        "probability_incident_30d_pct": 7.8,
+        "recommended_review_days": 60
+      },
+      "time_penalty": {
+        "days_without_report": 0,
+        "days_in_critical": 0,
+        "cumulative_penalty": 0.0,
+        "penalty_reason": "Sin penalización",
+        "decay_rate": 0.15
+      },
+      "improvement_signal": {
+        "trend_direction": "STABLE",
+        "improvement_score": 0.0,
+        "consecutive_good_months": 3,
+        "milestones_achieved": [
+          "1 mes sin incidentes",
+          "3 meses consecutivos OK"
+        ],
+        "next_milestone": "Completar semestre sin incidentes",
+        "days_to_milestone": 90
+      },
+      "remediation_plan": null
+    }
+  ]
+}

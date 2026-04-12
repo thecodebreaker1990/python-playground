@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSE Scoring System - Manual de Ayuda</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-section: #1e2a47;
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0a0;
+            --accent: #3b82f6;
+            --border-color: #2a2a4a;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #DC2626;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+        
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            nav { display: none; }
+        }
+        
+        /* Sidebar */
+        nav {
+            background: var(--bg-card);
+            padding: 20px;
+            border-right: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        nav h2 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        nav ul {
+            list-style: none;
+        }
+        
+        nav li {
+            margin: 5px 0;
+        }
+        
+        nav a {
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        nav a:hover, nav a.active {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--accent);
+        }
+        
+        nav .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin: 20px 0 10px 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Main content */
+        main {
+            padding: 40px;
+            max-width: 900px;
+        }
+        
+        header.hero {
+            text-align: center;
+            padding: 40px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+        }
+        
+        header.hero h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        header.hero p {
+            color: var(--text-secondary);
+        }
+        
+        section {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+        }
+        
+        section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        section h3 {
+            font-size: 1.1rem;
+            margin: 25px 0 15px;
+            color: var(--accent);
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+        
+        strong { color: var(--text-primary); }
+        
+        ul, ol {
+            margin: 15px 0 15px 25px;
+            color: var(--text-secondary);
+        }
+        
+        li { margin: 8px 0; }
+        
+        code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #f472b6;
+        }
+        
+        pre {
+            background: #0d1117;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid var(--border-color);
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e6edf3;
+        }
+        
+        .info-box {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+        
+        .info-box.tip {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+        
+        .info-box.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+        }
+        
+        .info-box.danger {
+            background: rgba(220, 38, 38, 0.1);
+            border-color: var(--danger);
+        }
+        
+        .info-box.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background: rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
+        
+        tr:hover td {
+            background: rgba(59, 130, 246, 0.05);
+        }
+        
+        .color-sample {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        
+        .formula {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        
+        .card {
+            background: var(--bg-section);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .card h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <h2>🛡️ HSE Docs</h2>
+            <ul>
+                <li><a href="#intro">Introducción</a></li>
+                <li><a href="#scoring">Sistema de Scoring</a></li>
+                <li class="section-title">Matriz 5x5</li>
+                <li><a href="#matrix">Matriz de Escalamiento</a></li>
+                <li><a href="#levels">Niveles de Urgencia</a></li>
+                <li><a href="#colors">Paleta de Colores</a></li>
+                <li class="section-title">Configuración</li>
+                <li><a href="#config">Archivo JSON</a></li>
+                <li><a href="#i18n">Multilenguaje (i18n)</a></li>
+                <li><a href="#api">API Python</a></li>
+                <li class="section-title">Avanzado</li>
+                <li><a href="#penalties">Penalizaciones</a></li>
+                <li><a href="#remediation">Remediación</a></li>
+                <li><a href="#bayesian">Modelo Bayesiano</a></li>
+            </ul>
+        </nav>
+        
+        <main>
+            <header class="hero">
+                <h1>🛡️ HSE Scoring System</h1>
+                <p>Manual de usuario y referencia técnica</p>
+                <p style="margin-top: 10px;"><code>v1.0</code> | Última actualización: Marzo 2026</p>
+            </header>
+            
+            <!-- Introducción -->
+            <section id="intro">
+                <h2>📖 Introducción</h2>
+                <p>
+                    El <strong>HSE Scoring System</strong> es un modelo de calificación para evaluar 
+                    contratistas en materia de Salud, Seguridad y Medio Ambiente (HSE). Funciona de manera 
+                    similar a un <strong>scoring bancario de crédito</strong>, donde:
+                </p>
+                <ul>
+                    <li>Se evalúan múltiples indicadores de riesgo</li>
+                    <li>Se calcula una puntuación de confianza basada en el historial</li>
+                    <li>Se asigna un nivel de escalamiento según la matriz 5x5</li>
+                    <li>Se genera un plan de remediación con checkpoints</li>
+                </ul>
+                
+                <div class="info-box tip">
+                    <strong>💡 Analogía bancaria:</strong> Así como un banco evalúa el riesgo crediticio 
+                    y define límites de crédito, este sistema evalúa el riesgo HSE y define niveles de 
+                    supervisión y restricciones operativas.
+                </div>
+            </section>
+            
+            <!-- Scoring -->
+            <section id="scoring">
+                <h2>📊 Sistema de Scoring</h2>
+                
+                <h3>Risk Score (0-100)</h3>
+                <p>Mide el nivel de riesgo basado en indicadores negativos:</p>
+                <ul>
+                    <li><strong>Tasa de eventos:</strong> Incidentes por cada 10,000 HH trabajadas</li>
+                    <li><strong>Acciones vencidas:</strong> Cantidad y criticidad de acciones sin cerrar</li>
+                    <li><strong>Cierres pendientes:</strong> Meses sin realizar cierre mensual</li>
+                    <li><strong>Tendencia:</strong> Comparación con meses anteriores</li>
+                </ul>
+                
+                <div class="formula">
+                    Risk Score = (Event Rate × 25) + (Overdue × 15) + (Missing Close × 20) + (Trend × 10)
+                </div>
+                
+                <h3>Trust Score (0-100)</h3>
+                <p>Mide la confiabilidad basada en indicadores positivos:</p>
+                <ul>
+                    <li><strong>Calidad de datos:</strong> Completitud y consistencia de reportes</li>
+                    <li><strong>Historial de cumplimiento:</strong> Meses sin incidentes</li>
+                    <li><strong>Respuesta a hallazgos:</strong> Tiempo de cierre de acciones</li>
+                </ul>
+                
+                <h3>Celda 5x5</h3>
+                <p>La combinación de Risk y Trust determina la posición en la matriz:</p>
+                <table>
+                    <tr>
+                        <th>Risk Score</th>
+                        <th>Nivel</th>
+                        <th>Trust Score</th>
+                        <th>Nivel</th>
+                    </tr>
+                    <tr><td>0-20</td><td>R1 (Muy Bajo)</td><td>0-20</td><td>T1 (Muy Baja)</td></tr>
+                    <tr><td>20-40</td><td>R2 (Bajo)</td><td>20-40</td><td>T2 (Baja)</td></tr>
+                    <tr><td>40-60</td><td>R3 (Moderado)</td><td>40-60</td><td>T3 (Media)</td></tr>
+                    <tr><td>60-80</td><td>R4 (Alto)</td><td>60-80</td><td>T4 (Alta)</td></tr>
+                    <tr><td>80-100</td><td>R5 (Crítico)</td><td>80-100</td><td>T5 (Muy Alta)</td></tr>
+                </table>
+            </section>
+            
+            <!-- Matriz -->
+            <section id="matrix">
+                <h2>📐 Matriz de Escalamiento 5x5</h2>
+                <p>
+                    La matriz combina <strong>Riesgo (R1-R5)</strong> en el eje vertical con 
+                    <strong>Confianza (T1-T5)</strong> en el eje horizontal para determinar 
+                    el nivel de escalamiento (1-5).
+                </p>
+                
+                <div class="info-box info">
+                    <strong>📊 Visor interactivo:</strong> Abre 
+                    <a href="matrix_viewer.html" style="color: var(--accent);">matrix_viewer.html</a> 
+                    para explorar la matriz de forma visual.
+                </div>
+                
+                <h3>Interpretación de la Matriz</h3>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>🔴 Esquina R5-T1</h4>
+                        <p>Peor escenario: Alto riesgo + Baja confianza = Suspensión inmediata</p>
+                    </div>
+                    <div class="card">
+                        <h4>🟢 Esquina R1-T5</h4>
+                        <p>Mejor escenario: Bajo riesgo + Alta confianza = Proveedor estratégico</p>
+                    </div>
+                    <div class="card">
+                        <h4>🟡 Diagonal</h4>
+                        <p>Balance: El riesgo se compensa con la confianza (supervisión estándar)</p>
+                    </div>
+                    <div class="card">
+                        <h4>⚠️ Anomalías</h4>
+                        <p>R1-T1: Bajo riesgo pero poca visibilidad = Regularizar documentación</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Niveles -->
+            <section id="levels">
+                <h2>🎚️ Niveles de Urgencia</h2>
+                <table>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Urgencia</th>
+                        <th>Revisión</th>
+                        <th>Acción Típica</th>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background: #DC2626"></span>5</td>
+                        <td>CRÍTICO</td>
+                        <td>1-3 días</td>
+                        <td>Suspensión de operaciones</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background: #EA580C"></span>4</td>
+                        <td>MUY ALTO</td>
+                        <td>5-7 días</td>
+                        <td>Intervención directa, supervisor dedicado</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background: #F59E0B"></span>3</td>
+                        <td>ALTO</td>
+                        <td>7-14 días</td>
+                        <td>Plan correctivo formal</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background: #22C55E"></span>2</td>
+                        <td>MEDIO</td>
+                        <td>21-30 días</td>
+                        <td>Seguimiento estructurado</td>
+                    </tr>
+                    <tr>
+                        <td><span class="color-sample" style="background: #10B981"></span>1</td>
+                        <td>BAJO</td>
+                        <td>30-90 días</td>
+                        <td>Mantenimiento estándar</td>
+                    </tr>
+                </table>
+            </section>
+            
+            <!-- Colores -->
+            <section id="colors">
+                <h2>🎨 Paleta de Colores</h2>
+                <p>Todos los colores están definidos en <code>config/matrix_5x5.json</code> en formato hexadecimal:</p>
+                
+                <h3>Niveles de Escalamiento</h3>
+                <table>
+                    <tr><th>Nivel</th><th>Color</th><th>Hex</th><th>Uso</th></tr>
+                    <tr>
+                        <td>1 - Bajo</td>
+                        <td><span class="color-sample" style="background: #10B981"></span></td>
+                        <td><code>#10B981</code></td>
+                        <td>Estados positivos, sin acción</td>
+                    </tr>
+                    <tr>
+                        <td>2 - Medio</td>
+                        <td><span class="color-sample" style="background: #22C55E"></span></td>
+                        <td><code>#22C55E</code></td>
+                        <td>Mejora continua, bajo seguimiento</td>
+                    </tr>
+                    <tr>
+                        <td>3 - Alto</td>
+                        <td><span class="color-sample" style="background: #F59E0B"></span></td>
+                        <td><code>#F59E0B</code></td>
+                        <td>Atención requerida</td>
+                    </tr>
+                    <tr>
+                        <td>4 - Muy Alto</td>
+                        <td><span class="color-sample" style="background: #EA580C"></span></td>
+                        <td><code>#EA580C</code></td>
+                        <td>Intervención urgente</td>
+                    </tr>
+                    <tr>
+                        <td>5 - Crítico</td>
+                        <td><span class="color-sample" style="background: #DC2626"></span></td>
+                        <td><code>#DC2626</code></td>
+                        <td>Acción inmediata</td>
+                    </tr>
+                </table>
+                
+                <div class="info-box tip">
+                    <strong>💡 Tip:</strong> Para cambiar los colores, edita directamente el JSON:
+                    <pre><code>"escalation_levels": {
+  "5": {"es": "Crítico", "icon": "🔴", "color": "#DC2626"}
+}</code></pre>
+                </div>
+            </section>
+            
+            <!-- Config JSON -->
+            <section id="config">
+                <h2>⚙️ Archivo de Configuración</h2>
+                <p>La matriz se configura en <code>config/matrix_5x5.json</code>:</p>
+                
+                <h3>Estructura del archivo</h3>
+                <pre><code>{
+  "_meta": { "version": "1.0", ... },
+  
+  "labels": {
+    "risk_levels": { "R1": {"es": "...", "en": "...", "color": "#..."} },
+    "trust_levels": { ... },
+    "urgency_levels": { ... },
+    "escalation_levels": { ... }
+  },
+  
+  "tooltips": {
+    "risk_score": {"es": "...", "en": "..."}
+  },
+  
+  "matrix": {
+    "R5-T1": {
+      "level": 5,
+      "urgency": "CRITICO",
+      "review_days": 1,
+      "remediation_days": 90,
+      "improvement_target": 40.0,
+      "action": {"es": "...", "en": "..."},
+      "tooltip": {"es": "...", "en": "..."}
+    },
+    ...
+  },
+  
+  "remediation_tasks": {
+    "CRITICO": [
+      {"id": "CRIT_001", "description": {...}, "priority": "URGENTE", ...}
+    ],
+    ...
+  }
+}</code></pre>
+            </section>
+            
+            <!-- i18n -->
+            <section id="i18n">
+                <h2>🌐 Multilenguaje (i18n)</h2>
+                <p>El sistema soporta <strong>español (es)</strong>, <strong>inglés (en)</strong> y <strong>portugués (pt)</strong>.</p>
+                
+                <h3>Cambiar idioma en Python</h3>
+                <pre><code>from config import set_language, get_label, get_current_language
+
+# Ver idioma actual (default: "es")
+print(get_current_language())  # "es"
+
+# Cambiar a inglés
+set_language("en")
+
+# Obtener label traducido
+print(get_label("risk_levels", "R5"))  # "Critical"
+
+# Cambiar a portugués
+set_language("pt")
+print(get_label("risk_levels", "R5"))  # "Crítico"</code></pre>
+
+                <h3>Agregar un nuevo idioma</h3>
+                <ol>
+                    <li>Editar <code>SUPPORTED_LANGUAGES</code> en <code>config/loader.py</code></li>
+                    <li>Agregar traducciones en el JSON para cada label</li>
+                </ol>
+                
+                <pre><code>"R5": {
+  "es": "Crítico",
+  "en": "Critical", 
+  "pt": "Crítico",
+  "fr": "Critique"  ← Agregar nuevo idioma
+}</code></pre>
+            </section>
+            
+            <!-- API -->
+            <section id="api">
+                <h2>🐍 API Python</h2>
+                
+                <h3>Funciones principales</h3>
+                <pre><code>from config import (
+    # Carga de configuración
+    load_matrix_config,       # Cargar JSON completo
+    get_escalation_matrix,    # Matriz como dict
+    get_remediation_tasks,    # Tareas como RemediationTask
+    
+    # Internacionalización
+    set_language,             # Cambiar idioma
+    get_current_language,     # Obtener idioma actual
+    get_label,                # Obtener label traducido
+    get_tooltip,              # Obtener tooltip traducido
+    get_cell_tooltip,         # Tooltip de celda específica
+    get_cell_action,          # Acción de celda traducida
+    
+    # Utilidades
+    get_all_labels_for_ui,    # Todos los labels para UI
+    validate_config,          # Validar estructura JSON
+    print_matrix_summary,     # Imprimir matriz en consola
+    
+    SUPPORTED_LANGUAGES,      # ["es", "en", "pt"]
+)</code></pre>
+
+                <h3>Ejemplo de uso</h3>
+                <pre><code>from config import get_escalation_matrix, set_language
+
+# Obtener matriz en español (default)
+matrix = get_escalation_matrix()
+cell = matrix["R3-T4"]
+
+print(f"Nivel: {cell['level']}")           # 2
+print(f"Urgencia: {cell['urgency']}")       # BAJO_MEDIO
+print(f"Acción: {cell['action']}")          # MEJORA CONTINUA: ...
+print(f"Días revisión: {cell['review_days']}")  # 30
+
+# Cambiar a inglés
+set_language("en")
+matrix = get_escalation_matrix()  # Recargar con nuevo idioma
+print(matrix["R3-T4"]["action"])  # CONTINUOUS IMPROVEMENT: ...</code></pre>
+            </section>
+            
+            <!-- Penalties -->
+            <section id="penalties">
+                <h2>⚠️ Sistema de Penalizaciones</h2>
+                <p>
+                    Similar a los <strong>intereses moratorios</strong> en banca, el sistema aplica 
+                    penalizaciones que crecen con el tiempo sin mejora.
+                </p>
+                
+                <h3>Cómo funcionan</h3>
+                <ul>
+                    <li><strong>Acciones críticas vencidas:</strong> +3 pts por acción</li>
+                    <li><strong>Backlog de acciones:</strong> +0.35 pts por acción no crítica</li>
+                    <li><strong>Meses sin cierre:</strong> +5 pts por mes</li>
+                    <li><strong>Crecimiento logarítmico:</strong> La penalización crece más lento con el tiempo</li>
+                </ul>
+                
+                <div class="formula">
+                    Penalty = base × log(1 + months_overdue)
+                </div>
+                
+                <h3>Decay por buen comportamiento</h3>
+                <p>Las penalizaciones decaen un <strong>15% por mes</strong> de buen comportamiento:</p>
+                <pre><code>if is_good_month:
+    penalty *= (1 - DECAY_RATE)  # 15% decay</code></pre>
+                
+                <div class="info-box warning">
+                    <strong>⚠️ Importante:</strong> Las penalizaciones se acumulan pero tienen un cap 
+                    máximo para evitar scores desproporcionados.
+                </div>
+            </section>
+            
+            <!-- Remediation -->
+            <section id="remediation">
+                <h2>📋 Planes de Remediación</h2>
+                <p>
+                    Cada celda de la matriz define un plan de remediación con tareas y checkpoints.
+                    Al igual que un <strong>plan de pago en cuotas</strong>, no se espera mejora inmediata.
+                </p>
+                
+                <h3>Estructura del plan</h3>
+                <ul>
+                    <li><strong>target_risk_reduction:</strong> % de reducción de riesgo esperada</li>
+                    <li><strong>target_trust_increase:</strong> % de aumento de confianza esperado</li>
+                    <li><strong>max_days_to_improve:</strong> Plazo total del plan</li>
+                    <li><strong>tasks:</strong> Lista de tareas priorizadas</li>
+                    <li><strong>checkpoint_days:</strong> Días para verificar avance</li>
+                </ul>
+                
+                <h3>Checkpoints típicos</h3>
+                <table>
+                    <tr><th>Plazo total</th><th>Checkpoints</th></tr>
+                    <tr><td>90 días</td><td>[30, 60, 90]</td></tr>
+                    <tr><td>45 días</td><td>[15, 30, 45]</td></tr>
+                    <tr><td>21 días</td><td>[7, 14, 21]</td></tr>
+                    <tr><td>14 días</td><td>[7, 14]</td></tr>
+                </table>
+            </section>
+            
+            <!-- Bayesian -->
+            <section id="bayesian">
+                <h2>📈 Modelo Bayesiano</h2>
+                <p>
+                    El sistema incluye un modelo <strong>Poisson-Gamma</strong> para predecir 
+                    la probabilidad de incidentes en los próximos 30 días.
+                </p>
+                
+                <h3>Prior Gamma</h3>
+                <div class="formula">
+                    λ ~ Gamma(α, β)<br>
+                    α = 2.0 (shape) | β = 10.0 (rate)
+                </div>
+                
+                <h3>Posterior</h3>
+                <p>Después de observar <code>k</code> incidentes en <code>t</code> meses:</p>
+                <div class="formula">
+                    α' = α + Σk<br>
+                    β' = β + t
+                </div>
+                
+                <h3>Predicción</h3>
+                <pre><code>from core.bayesian import BayesianIncidentModel
+
+model = BayesianIncidentModel()
+prob = model.predict_incident_probability_30d(
+    observed_incidents=[2, 0, 1, 0, 3],  # Últimos 5 meses
+    months_observed=5
+)
+print(f"P(incidente en 30d): {prob:.1%}")</code></pre>
+                
+                <div class="info-box info">
+                    <strong>📊 Nota:</strong> El modelo requiere <code>scipy</code> para cálculos 
+                    avanzados. Sin scipy, usa una aproximación simplificada.
+                </div>
+            </section>
+            
+            <footer>
+                <p>HSE Scoring System v1.0 | Documentación generada automáticamente</p>
+                <p>📁 Archivos: <code>config/matrix_5x5.json</code> | <code>docs/matrix_viewer.html</code></p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

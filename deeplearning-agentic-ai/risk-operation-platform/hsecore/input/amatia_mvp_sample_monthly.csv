@@ -1,0 +1,16 @@
+contractor,month,hours,operated,recordables,lti,hipo,actions_open,actions_closed,actions_overdue,critical_overdue,exec_walks,exec_crit_findings,monthly_close_submitted,rejected_reports,docs_blocked,docs_at_risk
+Acme Industrial Solutions,2026-01,1800,1,1,0,0,18,14,6,2,2,1,1,0,0,1
+Acme Industrial Solutions,2026-02,2100,1,0,0,1,20,13,9,3,1,2,1,1,0,1
+Acme Industrial Solutions,2026-03,1950,1,1,1,0,22,12,12,4,1,2,1,0,1,0
+Globex International,2026-01,900,1,0,0,0,10,9,1,0,2,0,1,0,0,0
+Globex International,2026-02,850,1,0,0,0,11,10,1,0,1,0,1,0,0,1
+Globex International,2026-03,880,1,0,0,0,12,11,1,0,2,0,1,0,0,0
+Cyberdyne Systems,2026-01,300,1,0,0,0,6,4,2,1,0,0,0,1,0,0
+Cyberdyne Systems,2026-02,0,0,0,0,0,6,4,2,1,0,0,0,0,0,0
+Cyberdyne Systems,2026-03,420,1,0,0,0,7,4,3,1,0,1,0,2,0,0
+Apex Heavy Industries,2026-01,2400,1,2,0,1,25,12,13,5,1,3,1,1,1,0
+Apex Heavy Industries,2026-02,2600,1,1,1,1,28,10,18,7,1,3,1,2,1,1
+Apex Heavy Industries,2026-03,2550,1,1,0,0,30,14,16,6,2,2,1,1,0,1
+Sinergy Managed Services,2026-01,1200,1,0,0,0,14,13,1,0,1,0,1,0,0,0
+Sinergy Managed Services,2026-02,1300,1,0,0,0,15,14,1,0,1,0,1,0,0,0
+Sinergy Managed Services,2026-03,1250,1,0,0,0,16,15,1,0,1,0,1,0,0,0

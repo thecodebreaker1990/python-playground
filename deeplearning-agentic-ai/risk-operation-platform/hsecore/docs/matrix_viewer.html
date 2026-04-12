@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSE Matrix 5x5 - Visor de Escalamiento</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f4f8;
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 30px;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        header h1 { 
+            font-size: 2.2rem; 
+            margin-bottom: 12px; 
+            color: #1e3a5f;
+        }
+        
+        header p { 
+            color: #5a6a7a; 
+            font-size: 1.1rem;
+        }
+        
+        .language-selector {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .lang-btn {
+            padding: 12px 28px;
+            border: 2px solid #dde3ea;
+            background: white;
+            color: #1e3a5f;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .lang-btn:hover {
+            background: #e8f4fc;
+            border-color: #3b82f6;
+        }
+        
+        .lang-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+        
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .two-columns { grid-template-columns: 1fr; }
+        }
+        
+        .column {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .column h2 {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e8ecf1;
+            color: #1e3a5f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* Matriz 5x5 */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: 90px repeat(5, 1fr);
+            gap: 8px;
+        }
+        
+        .matrix-header {
+            background: #e8ecf1;
+            padding: 16px 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 10px;
+            color: #1e3a5f;
+        }
+        
+        .matrix-header small {
+            display: block;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .matrix-row-header {
+            background: #e8ecf1;
+            padding: 16px 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #1e3a5f;
+        }
+        
+        .matrix-row-header small {
+            font-size: 0.8rem;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .matrix-cell {
+            padding: 20px 12px;
+            text-align: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 4px solid transparent;
+        }
+        
+        .matrix-cell:hover {
+            transform: scale(1.08);
+            z-index: 10;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .matrix-cell.selected {
+            border: 4px solid #1e3a5f;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .matrix-cell .level {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+        
+        .matrix-cell .urgency {
+            font-size: 0.85rem;
+            margin-top: 6px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+        
+        /* Leyenda */
+        .legend {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #e8ecf1;
+        }
+        
+        .legend h3 {
+            font-size: 1.1rem;
+            margin-bottom: 18px;
+            color: #5a6a7a;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 14px;
+            background: #f5f7fa;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .legend-color {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+        
+        .legend-item span {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        
+        /* Detalle de celda */
+        .cell-detail {
+            background: #f5f7fa;
+            border-radius: 14px;
+            padding: 28px;
+            min-height: 320px;
+        }
+        
+        .cell-detail.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7a8a9a;
+            font-size: 1.3rem;
+        }
+        
+        .cell-detail h3 {
+            font-size: 1.7rem;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #1e3a5f;
+        }
+        
+        .cell-detail .badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 25px 0;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .detail-item label {
+            display: block;
+            font-size: 0.9rem;
+            color: #7a8a9a;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .detail-item span {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e3a5f;
+        }
+        
+        .action-text {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            margin-top: 22px;
+            border-left: 6px solid #3b82f6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .action-text label {
+            display: block;
+            font-size: 0.9rem;
+            color: #7a8a9a;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .action-text p {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #1e3a5f;
+        }
+        
+        .tooltip-text {
+            margin-top: 22px;
+            padding: 20px;
+            background: #e0f2fe;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            color: #1e3a5f;
+            line-height: 1.6;
+        }
+        
+        /* Tasks section */
+        .tasks-section { 
+            margin-top: 35px;
+            padding-top: 28px;
+            border-top: 2px solid #e8ecf1;
+        }
+        
+        .tasks-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #1e3a5f;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border-left: 5px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        
+        .task-item .priority {
+            font-size: 0.85rem;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: #e8ecf1;
+            font-weight: 700;
+            color: #1e3a5f;
+            white-space: nowrap;
+        }
+        
+        .task-item .description {
+            flex: 1;
+            font-size: 1.05rem;
+            color: #1e3a5f;
+        }
+        
+        .task-item .deadline {
+            font-size: 1rem;
+            color: #5a6a7a;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 25px;
+            color: #7a8a9a;
+            font-size: 1rem;
+        }
+        
+        footer code {
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: #1e3a5f;
+            font-weight: 500;
+        }
+        
+        .error-msg {
+            color: #dc2626;
+            font-size: 1.2rem;
+            padding: 30px;
+            text-align: center;
+            background: #fef2f2;
+            border-radius: 12px;
+            border: 2px solid #fecaca;
+        }
+        
+        .error-msg code {
+            display: block;
+            margin-top: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ HSE Matrix 5x5 - Matriz de Escalamiento</h1>
+            <p>Visualización interactiva de la matriz Risk vs Trust</p>
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="es">🇪🇸 Español</button>
+                <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+                <button class="lang-btn" data-lang="pt">🇧🇷 Português</button>
+            </div>
+        </header>
+        
+        <div class="two-columns">
+            <!-- Columna 1: Matriz -->
+            <div class="column">
+                <h2>📊 Matriz de Escalamiento</h2>
+                
+                <div class="matrix-grid" id="matrixGrid">
+                    <div class="error-msg">Cargando matriz...</div>
+                </div>
+                
+                <div class="legend">
+                    <h3>📋 Niveles de Escalamiento</h3>
+                    <div class="legend-grid" id="legendGrid"></div>
+                </div>
+            </div>
+            
+            <!-- Columna 2: Detalle -->
+            <div class="column">
+                <h2>📋 Detalle de Celda</h2>
+                
+                <div class="cell-detail empty" id="cellDetail">
+                    <p>👆 Haz clic en una celda de la matriz para ver su detalle</p>
+                </div>
+                
+                <div class="tasks-section" id="tasksSection" style="display: none;">
+                    <h3>📝 Tareas de Remediación</h3>
+                    <div class="task-list" id="taskList"></div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>HSE Scoring System v1.0 | Configuración: <code>config/matrix_5x5.json</code></p>
+        </footer>
+    </div>
+
+    <script>
+        let config = null;
+        let currentLang = 'es';
+        let selectedCell = null;
+        
+        // Colores por nivel de escalamiento
+        const levelColors = {
+            1: '#059669',
+            2: '#16a34a',
+            3: '#ca8a04',
+            4: '#ea580c',
+            5: '#dc2626'
+        };
+        
+        // Cargar configuración - RUTA CORREGIDA (desde docs/ subimos a raíz)
+        async function loadConfig() {
+            try {
+                const response = await fetch('../config/matrix_5x5.json');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                config = await response.json();
+                console.log('✅ Config cargada correctamente');
+                renderMatrix();
+                renderLegend();
+            } catch (error) {
+                console.error('Error cargando config:', error);
+                document.getElementById('matrixGrid').innerHTML = 
+                    `<div class="error-msg">
+                        <strong>⚠️ Error cargando matriz</strong><br><br>
+                        Verifica que el archivo existe en:<br>
+                        <code>../config/matrix_5x5.json</code>
+                    </div>`;
+            }
+        }
+        
+        // Obtener texto localizado
+        function getLocalized(obj, lang = currentLang) {
+            if (!obj) return '';
+            if (typeof obj === 'string') return obj;
+            return obj[lang] || obj['es'] || obj['en'] || Object.values(obj)[0] || '';
+        }
+        
+        // Renderizar matriz 5x5
+        function renderMatrix() {
+            const grid = document.getElementById('matrixGrid');
+            const labels = config.labels;
+            
+            let html = '';
+            
+            // Header: esquina + Trust headers
+            html += '<div class="matrix-header">Risk ↓<br>Trust →</div>';
+            for (let t = 1; t <= 5; t++) {
+                const trustLabel = labels.trust_levels[`T${t}`];
+                html += `<div class="matrix-header">
+                    <strong>T${t}</strong>
+                    <small>${getLocalized(trustLabel)}</small>
+                </div>`;
+            }
+            
+            // Filas: R5 (arriba) a R1 (abajo)
+            for (let r = 5; r >= 1; r--) {
+                const riskLabel = labels.risk_levels[`R${r}`];
+                html += `<div class="matrix-row-header">
+                    <strong>R${r}</strong>
+                    <small>${getLocalized(riskLabel)}</small>
+                </div>`;
+                
+                for (let t = 1; t <= 5; t++) {
+                    const cellKey = `R${r}-T${t}`;
+                    const cell = config.matrix[cellKey];
+                    
+                    if (!cell) {
+                        html += `<div class="matrix-cell" style="background: #ccc;">?</div>`;
+                        continue;
+                    }
+                    
+                    const color = levelColors[cell.level];
+                    const urgency = labels.urgency_levels[cell.urgency];
+                    
+                    html += `<div class="matrix-cell" 
+                                  data-cell="${cellKey}"
+                                  style="background: ${color}; color: white;"
+                                  title="Clic para ver detalle de ${cellKey}">
+                        <div class="level">${cell.level}</div>
+                        <div class="urgency">${getLocalized(urgency)}</div>
+                    </div>`;
+                }
+            }
+            
+            grid.innerHTML = html;
+            
+            // Event listeners
+            grid.querySelectorAll('.matrix-cell[data-cell]').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    if (selectedCell) selectedCell.classList.remove('selected');
+                    this.classList.add('selected');
+                    selectedCell = this;
+                    showCellDetail(this.dataset.cell);
+                });
+            });
+        }
+        
+        // Renderizar leyenda
+        function renderLegend() {
+            const legend = document.getElementById('legendGrid');
+            const escalation = config.labels.escalation_levels;
+            
+            let html = '';
+            for (let i = 1; i <= 5; i++) {
+                const level = escalation[i];
+                html += `<div class="legend-item">
+                    <div class="legend-color" style="background: ${levelColors[i]}; color: white;">${level.icon}</div>
+                    <span>Nivel ${i}<br>${getLocalized(level)}</span>
+                </div>`;
+            }
+            
+            legend.innerHTML = html;
+        }
+        
+        // Mostrar detalle de celda
+        function showCellDetail(cellKey) {
+            const cell = config.matrix[cellKey];
+            const labels = config.labels;
+            const [risk, trust] = cellKey.split('-');
+            
+            const riskLabel = labels.risk_levels[risk];
+            const trustLabel = labels.trust_levels[trust];
+            const urgencyLabel = labels.urgency_levels[cell.urgency];
+            const levelLabel = labels.escalation_levels[cell.level];
+            
+            const detail = document.getElementById('cellDetail');
+            detail.classList.remove('empty');
+            
+            detail.innerHTML = `
+                <h3>
+                    <span class="badge" style="background: ${levelColors[cell.level]}">${levelLabel.icon} Nivel ${cell.level}</span>
+                    Celda ${cellKey}
+                </h3>
+                
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label>Riesgo (${risk})</label>
+                        <span style="color: ${riskLabel.color}">${riskLabel.icon} ${getLocalized(riskLabel)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Confianza (${trust})</label>
+                        <span style="color: ${trustLabel.color}">${trustLabel.icon} ${getLocalized(trustLabel)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Urgencia</label>
+                        <span style="color: ${urgencyLabel.color}">${getLocalized(urgencyLabel)}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Revisión cada</label>
+                        <span>${cell.review_days} días</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Plazo Remediación</label>
+                        <span>${cell.remediation_days > 0 ? cell.remediation_days + ' días' : 'No requerido'}</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Mejora Esperada</label>
+                        <span>${cell.improvement_target}%</span>
+                    </div>
+                </div>
+                
+                <div class="action-text">
+                    <label>🎯 Acción Recomendada</label>
+                    <p>${getLocalized(cell.action)}</p>
+                </div>
+                
+                ${cell.tooltip ? `
+                <div class="tooltip-text">
+                    💡 <strong>Ayuda:</strong> ${getLocalized(cell.tooltip)}
+                </div>
+                ` : ''}
+            `;
+            
+            showTasks(cell.urgency);
+        }
+        
+        // Mostrar tareas
+        function showTasks(urgency) {
+            const tasks = config.remediation_tasks ? config.remediation_tasks[urgency] : null;
+            const section = document.getElementById('tasksSection');
+            const list = document.getElementById('taskList');
+            
+            if (!tasks || tasks.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            
+            const priorityColors = {
+                'URGENTE': '#DC2626',
+                'ALTA': '#EA580C',
+                'MEDIA': '#CA8A04',
+                'BAJA': '#16A34A'
+            };
+            
+            list.innerHTML = tasks.map(task => `
+                <div class="task-item" style="border-color: ${priorityColors[task.priority] || '#888'}">
+                    <span class="priority">${task.priority}</span>
+                    <span class="description">${getLocalized(task.description)}</span>
+                    <span class="deadline">⏱️ ${task.deadline_days} días</span>
+                </div>
+            `).join('');
+        }
+        
+        // Cambiar idioma
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentLang = this.dataset.lang;
+                renderMatrix();
+                renderLegend();
+                
+                const detail = document.getElementById('cellDetail');
+                detail.innerHTML = '<p>👆 Haz clic en una celda de la matriz para ver su detalle</p>';
+                detail.classList.add('empty');
+                document.getElementById('tasksSection').style.display = 'none';
+                selectedCell = null;
+            });
+        });
+        
+        // Iniciar
+        loadConfig();
+    </script>
+</body>
+</html>
