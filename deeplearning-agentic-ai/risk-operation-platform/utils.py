@@ -248,6 +248,61 @@ def execute_sql(query: str, db_path: str = "risk_operations.db") -> pd.DataFrame
         conn.close()
 
 
+def build_contractors_monthly_left_join_query() -> str:
+    """
+    Return the default LEFT JOIN used to orchestrate notebook scoring input.
+
+    The shape intentionally mirrors the CSV input fields expected by the
+    HSE scoring pipeline, while preserving contractor master data as extras.
+    """
+    return """
+    SELECT
+        c.id AS contractor_id,
+        c.name AS contractor,
+        c.size_tier,
+        c.industry,
+        COALESCE(mr.month, '') AS month,
+        COALESCE(mr.hours, 0) AS hours,
+        COALESCE(mr.operated, 0) AS operated,
+        COALESCE(mr.recordables, 0) AS recordables,
+        COALESCE(mr.lti, 0) AS lti,
+        COALESCE(mr.hipo, 0) AS hipo,
+        COALESCE(mr.actions_open, 0) AS actions_open,
+        COALESCE(mr.actions_closed, 0) AS actions_closed,
+        COALESCE(mr.actions_overdue, 0) AS actions_overdue,
+        COALESCE(mr.critical_overdue, 0) AS critical_overdue,
+        COALESCE(mr.exec_walks, 0) AS exec_walks,
+        COALESCE(mr.exec_crit_findings, 0) AS exec_crit_findings,
+        COALESCE(mr.monthly_close_submitted, 0) AS monthly_close_submitted,
+        COALESCE(mr.rejected_reports, 0) AS rejected_reports,
+        COALESCE(mr.docs_blocked, 0) AS docs_blocked,
+        COALESCE(mr.docs_at_risk, 0) AS docs_at_risk
+    FROM contractors AS c
+    LEFT JOIN monthly_reports AS mr
+        ON mr.contractor_id = c.id
+    ORDER BY c.name, mr.month
+    """
+
+
+def fetch_csv_like_monthly_rows(
+    db_path: str = "risk_operations.db",
+    query: str | None = None,
+) -> list[dict[str, Any]]:
+    """
+    Return left-joined contractor/monthly-report rows as CSV-like dictionaries.
+
+    This is the notebook-friendly structure to pass into `rows_from_dicts()`.
+    """
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    try:
+        cur = conn.cursor()
+        cur.execute(query or build_contractors_monthly_left_join_query())
+        return [dict(row) for row in cur.fetchall()]
+    finally:
+        conn.close()
+
+
 # ================================
 # Utility function
 # ================================
